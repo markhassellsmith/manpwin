@@ -25,6 +25,35 @@ ManpWIN is a powerful Windows fractal exploration and rendering application feat
 
 ---
 
+## 💻 Quick Start
+
+### 🚀 Windows Users: Download & Run (No Build Required)
+
+**[⬇️ Download ManpWIN v1.0 for Windows (2.2 MB)](https://github.com/markhassellsmith/manpwin/releases/latest)**
+
+- ✅ No installation required
+- ✅ No Visual Studio needed  
+- ✅ Just extract and double-click!
+- ✅ Includes quick start guide
+
+**System Requirements:** Windows 10 or 11 (64-bit)
+
+---
+
+### 👨‍💻 Developers: Build from Source
+
+Want to study the code or contribute?
+
+```bash
+git clone https://github.com/markhassellsmith/manpwin.git
+cd manpwin
+# Open ManpWIN64.sln in Visual Studio 2022, press F5
+```
+
+**That's it!** All dependencies included - builds immediately with zero configuration.
+
+---
+
 ## 🎓 Designed for Math and Science Students
 
 This fork is specifically configured for **immediate use in educational settings**—perfect for undergraduate and graduate students in mathematics, physics, computer science, and computational sciences.
