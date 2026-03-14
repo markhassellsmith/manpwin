@@ -64,7 +64,6 @@ extern	void	LoadTextPalette(char *, int);
 extern	void	setup_defaults(void);
 
 extern	CDib	Dib;				// Device Independent Bitmap
-extern	"C"	png_text	TextData[];
 
 static	png_structp	read_ptr;
 static	png_infop	read_info_ptr, end_info_ptr;
@@ -256,30 +255,30 @@ int   png_decoder(HWND hwnd, char *szAppName, char *infile)
 
    // read the rest of the file, getting any additional chunks in info_ptr 
     png_read_end(read_ptr, read_info_ptr);
-    if (png_get_text(read_ptr, read_info_ptr, &text_ptr, &num_text) > 0)
+	if (png_get_text(read_ptr, read_info_ptr, &text_ptr, &num_text) > 0)
 	{
 	for (i = 0; i < (WORD)num_text; i++)
-	    {
-	    if (strncmp(TextData[i].key, "Comment", 7) == 0)
 		{
-		if (TextData[i].text_length > 0)
-		    {
-		    setup_defaults();
-		    GetParamData(hwnd, infile, TextData[i].text, "", TRUE);
-		    }
+		if (strncmp(text_ptr[i].key, "Comment", 7) == 0)
+		{
+		if (text_ptr[i].text_length > 0)
+			{
+			setup_defaults();
+			GetParamData(hwnd, infile, text_ptr[i].text, "", TRUE);
+			}
 		}
 // do we really need to store this?
-//	    if (strncmp(TextData[i].key, "Pixels", 6) == 0)
+//	    if (strncmp(text_ptr[i].key, "Pixels", 6) == 0)
 //		{
-//		if (TextData[i].text_length > (size_t)(width * height))			// yep, we have pixels
-//		    LoadIterationsDatabase(TextData[i].text, (int)TextData[i].text_length);
+//		if (text_ptr[i].text_length > (size_t)(width * height))			// yep, we have pixels
+//		    LoadIterationsDatabase(text_ptr[i].text, (int)text_ptr[i].text_length);
 //		}
-	    if (strncmp(TextData[i].key, "Palette", 7) == 0)
+		if (strncmp(text_ptr[i].key, "Palette", 7) == 0)
 		{
-		if (TextData[i].text_length > 16)		// yep, we have a palette override palette in file if this is found
-		    LoadTextPalette(TextData[i].text, (int)TextData[i].text_length);
+		if (text_ptr[i].text_length > 16)		// yep, we have a palette override palette in file if this is found
+			LoadTextPalette(text_ptr[i].text, (int)text_ptr[i].text_length);
 		}
-	    }
+		}
 	}
 
    // clean up after the read, and free any memory allocated 

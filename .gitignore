@@ -1,33 +1,46 @@
-x64
-*.filters
-build
-Release
-Debug
-*.user
-.vs
-
-# build folders
+# Build output directories
+x64/
 build/
 out/
 bin/
 obj/
+Release/
+Debug/
 
 # CMake generated
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
+install_manifest.txt
 
-# Visual Studio generated
-*.sln
-*.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
-*.vcproj
+# vcpkg artifacts (not our vendored libs in external/)
+vcpkg_installed/
+.vcpkg-root
 
-# binaries
+# Visual Studio user files
+*.user
+*.suo
+.vs/
+
+# Compiled binaries (not static libs in external/)
 *.exe
-*.lib
 *.dll
 *.obj
 *.pdb
-*.suo
+
+# Intermediate files
+*.filters
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.opendb
+
+# Keep vendored libraries in external/
+!external/lib/**/*.lib
+
+# Keep solution and project files for students
+!*.sln
+!*.vcxproj

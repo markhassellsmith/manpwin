@@ -28,18 +28,19 @@ extern	BYTE	default_palette[];
 
 CTrueCol::CTrueCol()			// device independent bitmap
     {
-    RandomDivisor = 128;
-    RandomColourFlag = FALSE;
-    Stretch = FALSE;
-    DisplayPaletteFlag = TRUE;
-    ScriptPaletteFlag = FALSE;
-    PalEditFlag = FALSE;
-    RedStartInt = 60;
-    GreenStartInt = 120;
-    BlueStartInt = 30;
-    RedIncInt = 100;
-    GreenIncInt = 255;
-    BlueIncInt = 200;
+	RandomDivisor = 128;
+	RandomColourFlag = FALSE;
+	Stretch = FALSE;
+	DisplayPaletteFlag = TRUE;
+	ScriptPaletteFlag = FALSE;
+	PalEditFlag = FALSE;
+	// Purple/Cyan/Magenta gradient with ZERO green
+	RedStartInt = 140;      // Higher red for magenta tones
+	GreenStartInt = 0;      // ZERO green to completely eliminate lime/green
+	BlueStartInt = 255;     // Maximum blue for cyan/purple base
+	RedIncInt = 80;         // Red variation for purple-to-magenta gradient
+	GreenIncInt = 0;        // ZERO green increment (no green anywhere)
+	BlueIncInt = 60;        // Blue variation for cyan depth
     InsideRed = 50;				// values for r, g, b channels for inside colour
     InsideGreen = 50;
     InsideBlue = 50;
