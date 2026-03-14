@@ -44,3 +44,7 @@ vcpkg_installed/
 # Keep solution and project files for students
 !*.sln
 !*.vcxproj
+
+# Release artifacts (binaries for GitHub Releases, not source)
+release-package/
+*.zip
