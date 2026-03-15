@@ -7,9 +7,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <vector>
 #include "manpwin.h"
 #include "Dib.h"
 #include "colour.h"
+#include "OtherFunctions.h"
+#include "Hailstone.h"
 
 extern	CDib		Dib;
 extern	CTrueCol	TrueCol;
@@ -21,6 +24,7 @@ extern	WORD		type;
 extern	int		subtype;
 extern	double		param[];
 extern	double		iterations;
+extern  COtherFunctions* g_pOtherFunctions;
 
 /**************************************************************************
 	Write SVG File with Metadata
@@ -58,9 +62,14 @@ int	write_svg_file(HWND hwnd, char *outfile, char *szAppName, char *CommentText)
     time_info = localtime(&current_time);
     strftime(time_buffer, sizeof(time_buffer), "%Y-%m-%dT%H:%M:%S", time_info);
 
-    // Write SVG header
+    // Write SVG header with viewBox in pixel coordinates
+    // Using viewBox with preserveAspectRatio for responsive scaling
+    // The viewBox defines the coordinate system (pixels), while the SVG scales to fit
     fprintf(fp, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n");
-    fprintf(fp, "<svg width=\"%d\" height=\"%d\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n", xdots, ydots);
+    fprintf(fp, "<svg viewBox=\"0 0 %d %d\"\n", xdots, ydots);
+    fprintf(fp, "     preserveAspectRatio=\"xMidYMid meet\"\n");
+    fprintf(fp, "     style=\"max-width: 100%%; height: auto;\"\n");
+    fprintf(fp, "     xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n");
     fprintf(fp, "  <!-- ========================================= -->\n");
     fprintf(fp, "  <!-- ManpWIN Metadata                         -->\n");
     fprintf(fp, "  <!-- ========================================= -->\n");
@@ -115,6 +124,48 @@ int	write_svg_file(HWND hwnd, char *outfile, char *szAppName, char *CommentText)
     fprintf(fp, "        Center X: %.10g\n", hor);
     fprintf(fp, "        Center Y: %.10g\n", vert);
     fprintf(fp, "        Width: %.10g\n", mandel_width);
+    fprintf(fp, "\n");
+    fprintf(fp, "      ViewBox (pixel coordinates for SVG rendering):\n");
+    fprintf(fp, "        minX: 0\n");
+    fprintf(fp, "        minY: 0\n");
+    fprintf(fp, "        width: %d\n", xdots);
+    fprintf(fp, "        height: %d\n", ydots);
+
+    // Add Hailstone-specific information if this is a Hailstone fractal
+    if (type == 245) // HAILSTONE
+    {
+        if (g_pOtherFunctions && g_pOtherFunctions->pHailstone)
+        {
+            const HailstoneConfig& config = g_pOtherFunctions->pHailstone->GetConfig();
+            const CycleInfo& cycleInfo = g_pOtherFunctions->pHailstone->GetCycleInfo();
+            const std::vector<HailstonePoint>& points = g_pOtherFunctions->pHailstone->GetPoints();
+
+            fprintf(fp, "\n");
+            fprintf(fp, "      Hailstone Sequence Information:\n");
+            fprintf(fp, "        Starting Point: (%d, %d)\n", config.startX, config.startY);
+            fprintf(fp, "        Total Iterations: %d\n", (int)points.size());
+            fprintf(fp, "        Max Iterations: %d\n", config.maxIterations);
+
+            if (cycleInfo.detected)
+            {
+                fprintf(fp, "        Cycle Detected: YES\n");
+                fprintf(fp, "          Cycle Point: (%d, %d)\n", cycleInfo.x, cycleInfo.y);
+                fprintf(fp, "          First Seen: Step %d\n", cycleInfo.startStep);
+                fprintf(fp, "          Repeated At: Step %d\n", cycleInfo.endStep);
+                fprintf(fp, "          Cycle Length: %d\n", cycleInfo.length);
+            }
+            else
+            {
+                fprintf(fp, "        Cycle Detected: NO (stopped at max iterations)\n");
+            }
+
+            fprintf(fp, "        Display Options:\n");
+            fprintf(fp, "          Show Axes: %s\n", config.showAxes ? "Yes" : "No");
+            fprintf(fp, "          Show Point Labels: %s\n", config.showPointLabels ? "Yes" : "No");
+            fprintf(fp, "          Show Dots: %s\n", config.showDots ? "Yes" : "No");
+        }
+    }
+
     fprintf(fp, "    </desc>\n");
     fprintf(fp, "  </g>\n");
     fprintf(fp, "\n");

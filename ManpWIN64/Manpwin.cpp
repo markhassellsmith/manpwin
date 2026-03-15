@@ -168,6 +168,7 @@ extern	void	SaveFileInitialize(HWND, HINSTANCE);
 extern	INT_PTR CALLBACK 	SavePNGOpenDlg(HWND, LPSTR, LPSTR);
 extern	INT_PTR CALLBACK 	SaveParOpenDlg(HWND, LPSTR, LPSTR);
 extern	INT_PTR CALLBACK	SaveKfrOpenDlg(HWND, LPSTR, LPSTR);
+extern	INT_PTR CALLBACK	SaveSVGOpenDlg(HWND, LPSTR, LPSTR);
 extern	INT_PTR CALLBACK 	SaveParImageOpenDlg(HWND, LPSTR, LPSTR);
 extern	void	SaveFile(HWND, LPSTR, LPSTR);
 extern	INT_PTR CALLBACK 	SaveColFileOpenDlg(HWND, LPSTR, LPSTR);
@@ -531,8 +532,8 @@ MessageBox (hwnd, TempString, szAppName, MB_ICONEXCLAMATION | MB_OK);
 
 	  case WM_INITMENUPOPUP:
 		switch (lParam)
-		    {
-		    case 0:	   // File menu
+			{
+			case 0:	   // File menu
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_NEW, MF_GRAYED);
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_OPEN_PAR, MF_ENABLED);
 			 EnableMenuItem((HMENU)(_int64)wParam, IDM_OPEN_PNG, MF_ENABLED);
@@ -540,6 +541,8 @@ MessageBox (hwnd, TempString, szAppName, MB_ICONEXCLAMATION | MB_OK);
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_SAVEPAR, MF_ENABLED);
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_SAVEIMAGE, MF_ENABLED);
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_SAVE_PAR_AND_IMAGE, MF_ENABLED);
+			 // SVG export only available for Hailstone (sequence visualization, not pixel-based fractals)
+			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_SAVE_SVG, (type == HAILSTONE) ? MF_ENABLED : MF_GRAYED);
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_EXIT, MF_ENABLED);
 			 break;
 		    case 1:	   // Edit Dialogs menu
@@ -1203,9 +1206,14 @@ LRESULT CALLBACK PASCAL	MenuCommand (HWND hwnd, UINT message, WPARAM wParam, LPA
 	    return 0;
 
 	case IDM_SAVEIMAGE:						// image file
-	    if (SavePNGOpenDlg (hwnd, szSaveFileName, szTitleName) == 0)
+		if (SavePNGOpenDlg (hwnd, szSaveFileName, szTitleName) == 0)
 		SaveFile (hwnd, szSaveFileName, szTitleName);                    
-	    return 0;
+		return 0;
+
+	case IDM_SAVE_SVG:						// SVG vector file
+		if (SaveSVGOpenDlg(hwnd, szSaveFileName, szTitleName) == 0)
+		SaveFile(hwnd, szSaveFileName, szTitleName);
+		return 0;
 
 	case IDM_SAVE_TRUE_MAP:
 	    if (SaveColFileOpenDlg (hwnd, szSaveFileName, szTitleName) == 0)

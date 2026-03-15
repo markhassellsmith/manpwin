@@ -455,10 +455,10 @@ void CHailstone::DrawPointLabels(HWND hwnd, HDC hdc, double centerX, double cent
         // Check if this is the cycle point (visited twice)
         if (m_cycleInfo.detected && pt.x == m_cycleInfo.x && pt.y == m_cycleInfo.y)
         {
-            // This point was visited twice - show both labels
+            // This point was visited twice - show both visits explicitly with the word "and"
             if ((int)i == m_cycleInfo.startStep)
             {
-                // First visit - show both ordinal numbers in BOLD
+                // First visit - show both occurrences in BOLD format: (step, x, y) and (step, x, y)
                 sprintf(labelText, "(%d, %d, %d) and (%d, %d, %d)", 
                         m_cycleInfo.startStep, pt.x, pt.y,
                         m_cycleInfo.endStep, pt.x, pt.y);
@@ -471,13 +471,13 @@ void CHailstone::DrawPointLabels(HWND hwnd, HDC hdc, double centerX, double cent
             }
             else
             {
-                // Regular point
+                // Regular point - single occurrence
                 sprintf(labelText, "(%d, %d, %d)", pt.step, pt.x, pt.y);
             }
         }
         else
         {
-            // Regular point - single label
+            // Regular point - single occurrence
             sprintf(labelText, "(%d, %d, %d)", pt.step, pt.x, pt.y);
         }
 
@@ -502,6 +502,65 @@ void CHailstone::DrawPointLabels(HWND hwnd, HDC hdc, double centerX, double cent
 
         extern CDib Dib;
         Dib.Text2Dib(hdc, &textRect, RGB(255, 255, 255), RGB(0, 0, 0), &lf, TRANSPARENT, labelText);
+    }
+}
+
+/**************************************************************************
+    Draw information overlay in upper left corner
+**************************************************************************/
+void CHailstone::DrawInfoOverlay(HWND hwnd, HDC hdc, int screenWidth, int screenHeight)
+{
+    if (m_points.empty())
+        return;
+
+    // Create multi-line info text
+    char infoText[512];
+    int lineCount = 0;
+    char* lines[10];
+    char line0[128], line1[128], line2[128], line3[128], line4[128], line5[128];
+
+    // Line 0: Starting point
+    sprintf(line0, "Start: (%d, %d)", m_config.startX, m_config.startY);
+    lines[lineCount++] = line0;
+
+    // Line 1: Total iterations
+    sprintf(line1, "Iterations: %d", (int)m_points.size());
+    lines[lineCount++] = line1;
+
+    // Line 2: Cycle detection status (simple)
+    if (m_cycleInfo.detected)
+    {
+        sprintf(line2, "Cycle: DETECTED");
+    }
+    else
+    {
+        sprintf(line2, "Cycle: None");
+    }
+    lines[lineCount++] = line2;
+
+    // Setup font for info display
+    LOGFONT lf;
+    memset(&lf, 0, sizeof(LOGFONT));
+    lf.lfHeight = -14;  // Readable size
+    lf.lfWeight = FW_BOLD;  // Bold for visibility
+    lf.lfCharSet = DEFAULT_CHARSET;
+    lf.lfOutPrecision = OUT_DEFAULT_PRECIS;
+    lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+    lf.lfQuality = DEFAULT_QUALITY;
+    lf.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
+    strcpy(lf.lfFaceName, "Arial");
+
+    // Draw each line with slight offset
+    extern CDib Dib;
+    for (int i = 0; i < lineCount; i++)
+    {
+        RECT textRect;
+        textRect.left = 10;
+        textRect.top = 10 + (i * 18);  // 18 pixels per line
+        textRect.right = 400;
+        textRect.bottom = textRect.top + 20;
+
+        Dib.Text2Dib(hdc, &textRect, RGB(255, 0, 255), RGB(0, 0, 0), &lf, TRANSPARENT, lines[i]);
     }
 }
 

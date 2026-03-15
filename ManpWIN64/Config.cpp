@@ -41,6 +41,7 @@ static	char	ManpPath[_MAX_PATH] = "";		// path for ManpWin.EXE where needed
 	char	SCIPath[_MAX_PATH] = "";		// path for SCI files
 	char	PARPath[_MAX_PATH] = "";		// path for PAR files
 	char	KFRPath[_MAX_PATH] = "";		// path for KFR files
+	char	SVGPath[_MAX_PATH] = "";		// path for SVG files
 	char	FracPARPath[_MAX_PATH] = "";		// path for Fractint par files
 	char	IFSPath[_MAX_PATH] = "";		// path for IFS files
 	char	LSYSPath[_MAX_PATH] = "";		// path for LSYS files

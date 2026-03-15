@@ -2264,6 +2264,7 @@
 #define IDC_BIPOLAR                     40031
 #define IDM_HAILSTONE_TOGGLE_LABELS     40031
 #define IDM_HAILSTONE_TOGGLE_DOTS       40032
+#define IDM_SAVE_SVG                    40033
 #define ID_FRACVAR01                    40051
 #define ID_FRACVAR02                    40052
 #define ID_FRACVAR03                    40053

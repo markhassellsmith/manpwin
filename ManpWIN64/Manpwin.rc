@@ -66,6 +66,7 @@ BEGIN
         MENUITEM "Open Kalles Fraktaler File\tK", IDM_OPEN_KALLES
         MENUITEM "&Save Parameters\tS",         IDM_SAVEPAR
         MENUITEM "Save Im&age...\tA",           IDM_SAVEIMAGE
+        MENUITEM "Save S&VG Vector Image...",   IDM_SAVE_SVG
         MENUITEM "Save Both Parameters and Image\t<Ctrl><Shft>S", IDM_SAVE_PAR_AND_IMAGE
         MENUITEM "Save Kalles Fraktaler File\t<Ctrl>K", IDM_SAVE_KALLES
         MENUITEM SEPARATOR

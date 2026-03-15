@@ -148,6 +148,7 @@ private:
     void DrawAxes(class CPlot& plot, double minX, double maxX, double minY, double maxY,
                   double centerX, double centerY, float pixelsPerUnitX, float pixelsPerUnitY,
                   int screenWidth, int screenHeight, long threshold);
+    void DrawInfoOverlay(HWND hwnd, HDC hdc, int screenWidth, int screenHeight);
     void DrawSequence(class CPlot& plot, double centerX, double centerY,
                       float pixelsPerUnitX, float pixelsPerUnitY,
                       int screenWidth, int screenHeight, long threshold);

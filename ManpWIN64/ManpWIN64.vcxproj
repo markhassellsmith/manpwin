@@ -288,6 +288,7 @@ $(OutDir)ManpWIN.chm copied successfully</Command>
     <ClCompile Include="SprottOsc.cpp" />
     <ClCompile Include="Stereo.cpp" />
     <ClCompile Include="Surfaces.cpp" />
+    <ClCompile Include="svg.cpp" />
     <ClCompile Include="Sym.cpp" />
     <ClCompile Include="SymPlot.cpp" />
     <ClCompile Include="Tess.cpp" />
