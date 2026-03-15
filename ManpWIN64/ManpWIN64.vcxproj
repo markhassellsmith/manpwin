@@ -200,6 +200,7 @@ $(OutDir)ManpWIN.chm copied successfully</Command>
     <ClCompile Include="filter.cpp" />
     <ClCompile Include="FilterData.cpp" />
     <ClCompile Include="fourier.cpp" />
+    <ClCompile Include="Hailstone.cpp" />
     <ClCompile Include="Fract.cpp" />
     <ClCompile Include="FractalMaps.cpp" />
     <ClCompile Include="fractalp.cpp" />
@@ -304,6 +305,7 @@ $(OutDir)ManpWIN.chm copied successfully</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="anim.h" />
+    <ClInclude Include="Hailstone.h" />
     <ClInclude Include="Approximation.h" />
     <ClInclude Include="Arithmetic.h" />
     <ClInclude Include="Bif.h" />
@@ -374,6 +376,10 @@ $(OutDir)ManpWIN.chm copied successfully</Command>
     <ProjectReference Include="..\zlib\zlib.vcxproj">
       <Project>{0705fa62-b06d-4d1e-b849-4afe977d31ee}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
+    <Image Include="MANPWIN.ICO" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

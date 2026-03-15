@@ -1,23 +1,31 @@
 /*
-    OtherFUNCTIONS.CPP a module for calculations of fractals that are non-standard 
-    
-    Written in Microsoft Visual 'C++' by Paul de Leeuw.
+	OtherFUNCTIONS.CPP a module for calculations of fractals that are non-standard 
 
-    This program is written in "standard" C. Hardware dependant code
-    (console drivers & serial I/O) is in separate machine libraries.
+	Written in Microsoft Visual 'C++' by Paul de Leeuw.
+
+	This program is written in "standard" C. Hardware dependant code
+	(console drivers & serial I/O) is in separate machine libraries.
 */
 
 #include	"OtherFunctions.h"
+#include	"Hailstone.h"
 
 extern std::vector<float> wpixels;
 
+// Global pointer for Hailstone toggle access
+COtherFunctions* g_pOtherFunctions = nullptr;
+
 COtherFunctions::COtherFunctions()
-    : wpixels(::wpixels)
-    {}
+	: wpixels(::wpixels)
+	{
+	g_pOtherFunctions = this;
+	}
 
 COtherFunctions::COtherFunctions(std::vector<float>& wp)
-    : wpixels(wp)
-    {}
+	: wpixels(wp)
+	{
+	g_pOtherFunctions = this;
+	}
 
 /**************************************************************************
 	Initialise functions for each pixel
@@ -895,8 +903,12 @@ int	COtherFunctions::RunOtherFunctions(WORD type, BYTE *SpecialFlag, long *itera
 	    return 0;
 
 	case CIRCLES:
-	    DoCircles();
-	    return 0;
+		DoCircles();
+		return 0;
+
+	case HAILSTONE:
+		DoHailstone(xdots, ydots);
+		return 0;
 
 	case SIERPINSKIFLOWERS:
 	    DoSierpinskiFlower();
@@ -1275,8 +1287,365 @@ void	COtherFunctions::set_Plasma_palette(int rotate(int direction))
 **************************************************************************/
 
 void	COtherFunctions::FPUsincos(double *Angle, double *Sin, double *Cos)
-    {
-    *Sin = sin(*Angle);
-    *Cos = cos(*Angle);
-    }
+	{
+	*Sin = sin(*Angle);
+	*Cos = cos(*Angle);
+	}
+
+/**************************************************************************
+	Hailstone Sequence Visualization
+**************************************************************************/
+
+int	COtherFunctions::DoHailstone(int xdots, int ydots)
+	{
+	// Delete old hailstone object if it exists
+	if (pHailstone)
+	{
+		delete pHailstone;
+		pHailstone = nullptr;
+	}
+
+	// Create new hailstone object
+	pHailstone = new CHailstone();
+	HailstoneConfig config;
+
+	// Use configuration from param array (set by dialog)
+	config.startX = (int)param[0];
+	config.startY = (int)param[1];
+	config.maxIterations = (int)param[2];
+	config.preset = (HailstonePreset)((int)param[3]);  // Get preset from param[3]
+	config.detectCycles = true;
+	config.showAxes = ShowAxes;
+	config.showPointLabels = ShowPointLabels;
+	config.showDots = ShowDots;
+
+	// Generate the sequence (only done once)
+	if (!pHailstone->GenerateSequence(config))
+	{
+		delete pHailstone;
+		pHailstone = nullptr;
+		return -1;
+	}
+
+	// Save screen dimensions for re-rendering
+	HailstoneXdots = xdots;
+	HailstoneYdots = ydots;
+
+	// Render the visualization
+	if (pHailstone->Render(hwnd, Plot, xdots, ydots, threshold) < 0)
+	{
+		delete pHailstone;
+		pHailstone = nullptr;
+		return -1;
+	}
+
+	// Render statistics in upper left corner
+	RenderHailstoneStatistics(hwnd, *pHailstone, xdots, ydots);
+
+	// Render point labels if enabled
+	if (ShowPointLabels)
+	{
+		double minX, maxX, minY, maxY;
+		pHailstone->CalculateBounds(minX, maxX, minY, maxY);
+
+		double centerX = (minX + maxX) / 2.0;
+		double centerY = (minY + maxY) / 2.0;
+		double dataRangeX = maxX - minX;
+		double dataRangeY = maxY - minY;
+
+		float pixelsPerUnitX = (float)xdots / (float)dataRangeX;
+		float pixelsPerUnitY = (float)ydots / (float)dataRangeY;
+
+		RenderPointLabels(hwnd, *pHailstone, centerX, centerY, pixelsPerUnitX, pixelsPerUnitY, xdots, ydots);
+	}
+
+	return 0;
+	}
+
+/**************************************************************************
+	Render Hailstone Statistics in Upper Left Corner (drawn to DIB)
+**************************************************************************/
+
+void COtherFunctions::RenderHailstoneStatistics(HWND hwndIn, CHailstone& hailstone, int xdots, int ydots)
+	{
+	const HailstoneConfig& config = hailstone.GetConfig();
+	const CycleInfo& cycleInfo = hailstone.GetCycleInfo();
+	const std::vector<HailstonePoint>& points = hailstone.GetPoints();
+
+	// Create a memory DC compatible with the screen
+	HDC hDc = GetDC(hwndIn);
+	if (!hDc)
+		return;
+
+	HDC hdcMem = CreateCompatibleDC(hDc);
+	if (!hdcMem)
+	{
+		ReleaseDC(hwndIn, hDc);
+		return;
+	}
+
+	// Create a temporary bitmap
+	HBITMAP hBitmap = CreateCompatibleBitmap(hDc, xdots, ydots);
+	HBITMAP hOldBitmap = (HBITMAP)SelectObject(hdcMem, hBitmap);
+
+	// Get the current DIB bits into the bitmap
+	if (SetDIBits(hDc, hBitmap, 0, ydots, Dib->DibPixels.data(), (LPBITMAPINFO)Dib->pDibInf, DIB_RGB_COLORS) == 0)
+	{
+		SelectObject(hdcMem, hOldBitmap);
+		DeleteObject(hBitmap);
+		DeleteDC(hdcMem);
+		ReleaseDC(hwndIn, hDc);
+		return;
+	}
+
+	// Set up font
+	LOGFONT lf = { 0 };
+	lf.lfHeight = -14;
+	lf.lfWeight = FW_NORMAL;
+	lf.lfCharSet = DEFAULT_CHARSET;
+	lf.lfOutPrecision = OUT_DEFAULT_PRECIS;
+	lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+	lf.lfQuality = DEFAULT_QUALITY;
+	lf.lfPitchAndFamily = DEFAULT_PITCH | FF_SWISS;
+	strcpy_s(lf.lfFaceName, "Arial");
+
+	HFONT hFont = CreateFontIndirect(&lf);
+	HFONT hOldFont = (HFONT)SelectObject(hdcMem, hFont);
+
+	// Medium magenta color RGB(200, 0, 200)
+	SetTextColor(hdcMem, RGB(200, 0, 200));
+	SetBkMode(hdcMem, TRANSPARENT);
+
+	char buffer[256];
+	int lineHeight = 16;
+	int yPos = 5;
+	int xPos = 5;
+
+	// Row 1: Title
+	sprintf_s(buffer, "Hailstone Sequence (N,X,Y)");
+	TextOut(hdcMem, xPos, yPos, buffer, (int)strlen(buffer));
+	yPos += lineHeight;
+
+	// Row 2: Starting point
+	sprintf_s(buffer, "Starting point: (0, %d, %d)", config.startX, config.startY);
+	TextOut(hdcMem, xPos, yPos, buffer, (int)strlen(buffer));
+	yPos += lineHeight;
+
+	// Row 3: Total points
+	sprintf_s(buffer, "Total points: %d", (int)points.size());
+	TextOut(hdcMem, xPos, yPos, buffer, (int)strlen(buffer));
+	yPos += lineHeight;
+
+	// Rows 4-6: Cycle information (if detected)
+	if (cycleInfo.detected)
+	{
+		// Row 4: Cycle detected
+		sprintf_s(buffer, "Cycle Detected: Point (%d, %d, %d)",
+			cycleInfo.endStep, cycleInfo.x, cycleInfo.y);
+		TextOut(hdcMem, xPos, yPos, buffer, (int)strlen(buffer));
+		yPos += lineHeight;
+
+		// Row 5: Duplicate of
+		sprintf_s(buffer, "Duplicate of: (%d, %d, %d)",
+			cycleInfo.startStep, cycleInfo.x, cycleInfo.y);
+		TextOut(hdcMem, xPos, yPos, buffer, (int)strlen(buffer));
+		yPos += lineHeight;
+
+		// Row 6: Cycle length
+		sprintf_s(buffer, "Cycle length: %d", cycleInfo.length);
+		TextOut(hdcMem, xPos, yPos, buffer, (int)strlen(buffer));
+	}
+
+	// Copy the modified bitmap back to the DIB
+	GetDIBits(hDc, hBitmap, 0, ydots, Dib->DibPixels.data(), (LPBITMAPINFO)Dib->pDibInf, DIB_RGB_COLORS);
+
+	// Clean up
+	SelectObject(hdcMem, hOldFont);
+	DeleteObject(hFont);
+	SelectObject(hdcMem, hOldBitmap);
+	DeleteObject(hBitmap);
+	DeleteDC(hdcMem);
+	ReleaseDC(hwndIn, hDc);
+	}
+
+/**************************************************************************
+	Render Point Labels at Each Hailstone Point (drawn to DIB)
+**************************************************************************/
+
+void COtherFunctions::RenderPointLabels(HWND hwndIn, CHailstone& hailstone, double centerX, double centerY,
+	float pixelsPerUnitX, float pixelsPerUnitY, int screenWidth, int screenHeight)
+	{
+	const std::vector<HailstonePoint>& points = hailstone.GetPoints();
+
+	// Create a memory DC compatible with the screen
+	HDC hDc = GetDC(hwndIn);
+	if (!hDc)
+		return;
+
+	HDC hdcMem = CreateCompatibleDC(hDc);
+	if (!hdcMem)
+	{
+		ReleaseDC(hwndIn, hDc);
+		return;
+	}
+
+	// Create a temporary bitmap
+	HBITMAP hBitmap = CreateCompatibleBitmap(hDc, screenWidth, screenHeight);
+	HBITMAP hOldBitmap = (HBITMAP)SelectObject(hdcMem, hBitmap);
+
+	// Get the current DIB bits into the bitmap
+	if (SetDIBits(hDc, hBitmap, 0, screenHeight, Dib->DibPixels.data(), (LPBITMAPINFO)Dib->pDibInf, DIB_RGB_COLORS) == 0)
+	{
+		SelectObject(hdcMem, hOldBitmap);
+		DeleteObject(hBitmap);
+		DeleteDC(hdcMem);
+		ReleaseDC(hwndIn, hDc);
+		return;
+	}
+
+	// Set up small font for labels
+	LOGFONT lf = { 0 };
+	lf.lfHeight = -10;  // Small size font
+	lf.lfWeight = FW_NORMAL;
+	lf.lfCharSet = DEFAULT_CHARSET;
+	lf.lfOutPrecision = OUT_DEFAULT_PRECIS;
+	lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+	lf.lfQuality = DEFAULT_QUALITY;
+	lf.lfPitchAndFamily = DEFAULT_PITCH | FF_SWISS;
+	strcpy_s(lf.lfFaceName, "Arial");
+
+	HFONT hFont = CreateFontIndirect(&lf);
+	HFONT hOldFont = (HFONT)SelectObject(hdcMem, hFont);
+
+	// White color for labels
+	SetTextColor(hdcMem, RGB(255, 255, 255));
+	SetBkMode(hdcMem, TRANSPARENT);
+
+	int screenCenterX = screenWidth / 2;
+	int screenCenterY = screenHeight / 2;
+
+	char buffer[64];
+
+	// Only label every Nth point to avoid clutter (adjust based on total points)
+	int labelInterval = 1;
+	if (points.size() > 50)
+		labelInterval = (int)points.size() / 25;  // Show ~25 labels max
+
+	for (size_t i = 0; i < points.size(); i += labelInterval)
+	{
+		const HailstonePoint& pt = points[i];
+
+		// Transform to screen coordinates
+		int x = screenCenterX + (int)((pt.x - centerX) * pixelsPerUnitX);
+		int y = screenCenterY - (int)((pt.y - centerY) * pixelsPerUnitY);
+
+		// Check if on screen
+		if (x < 0 || x >= screenWidth || y < 0 || y >= screenHeight)
+			continue;
+
+		// Format label: (N, X, Y)
+		sprintf_s(buffer, "(%d,%d,%d)", pt.step, pt.x, pt.y);
+
+		// Position label slightly offset from point (to the right and up)
+		TextOut(hdcMem, x + 5, y - 15, buffer, (int)strlen(buffer));
+	}
+
+	// Copy the modified bitmap back to the DIB
+	GetDIBits(hDc, hBitmap, 0, screenHeight, Dib->DibPixels.data(), (LPBITMAPINFO)Dib->pDibInf, DIB_RGB_COLORS);
+
+	// Clean up
+	SelectObject(hdcMem, hOldFont);
+	DeleteObject(hFont);
+	SelectObject(hdcMem, hOldBitmap);
+	DeleteObject(hBitmap);
+	DeleteDC(hdcMem);
+	ReleaseDC(hwndIn, hDc);
+	}
+
+/**************************************************************************
+	Getter/Setter methods for Hailstone options
+**************************************************************************/
+
+void COtherFunctions::GetShowAxes(BOOL in)
+	{
+	ShowAxes = in;
+	}
+
+void COtherFunctions::GetShowPointLabels(BOOL in)
+	{
+	ShowPointLabels = in;
+	}
+
+void COtherFunctions::GetShowDots(BOOL in)
+	{
+	ShowDots = in;
+	}
+
+/**************************************************************************
+	Toggle methods for Hailstone options (with immediate re-render)
+**************************************************************************/
+
+void COtherFunctions::ToggleShowAxes()
+	{
+	ShowAxes = !ShowAxes;
+	ReRenderHailstone(HailstoneXdots, HailstoneYdots);
+	}
+
+void COtherFunctions::ToggleShowPointLabels()
+	{
+	ShowPointLabels = !ShowPointLabels;
+	ReRenderHailstone(HailstoneXdots, HailstoneYdots);
+	}
+
+void COtherFunctions::ToggleShowDots()
+	{
+	ShowDots = !ShowDots;
+	ReRenderHailstone(HailstoneXdots, HailstoneYdots);
+	}
+
+/**************************************************************************
+	Re-render Hailstone without recomputing the sequence
+**************************************************************************/
+
+int COtherFunctions::ReRenderHailstone(int xdots, int ydots)
+	{
+	if (!pHailstone)
+		return -1;		// No sequence generated yet
+
+	// Update display flags in the CHailstone object
+	pHailstone->UpdateDisplayFlags(ShowAxes, ShowPointLabels, ShowDots);
+
+	// Clear the screen first
+	memset(Dib->DibPixels.data(), 0, Dib->DibPixels.size());
+
+	// Re-render the visualization (sequence already exists)
+	if (pHailstone->Render(hwnd, Plot, xdots, ydots, threshold) < 0)
+		return -1;
+
+	// Re-render statistics
+	RenderHailstoneStatistics(hwnd, *pHailstone, xdots, ydots);
+
+	// Re-render point labels if enabled
+	if (ShowPointLabels)
+	{
+		double minX, maxX, minY, maxY;
+		pHailstone->CalculateBounds(minX, maxX, minY, maxY);
+
+		double centerX = (minX + maxX) / 2.0;
+		double centerY = (minY + maxY) / 2.0;
+		double dataRangeX = maxX - minX;
+		double dataRangeY = maxY - minY;
+
+		float pixelsPerUnitX = (float)xdots / (float)dataRangeX;
+		float pixelsPerUnitY = (float)ydots / (float)dataRangeY;
+
+		RenderPointLabels(hwnd, *pHailstone, centerX, centerY, pixelsPerUnitX, pixelsPerUnitY, xdots, ydots);
+	}
+
+	// Invalidate window to force redraw
+	InvalidateRect(hwnd, NULL, FALSE);
+
+	return 0;
+	}
+
 

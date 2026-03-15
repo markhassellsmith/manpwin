@@ -45,6 +45,9 @@
 // stuff for Apollonius Fractal
 #define SQRT3    1.732050807568877193
 
+// Global pointer for Hailstone toggle access
+extern class COtherFunctions* g_pOtherFunctions;
+
 //////////////////////////////////////////////////////////////////////
 // Class definition
 //////////////////////////////////////////////////////////////////////
@@ -86,8 +89,27 @@ class COtherFunctions
 	void	GetCount(long in);
 	void	GetSubtype(int in);
 
+	// stuff for Hailstone
+	void	GetShowAxes(BOOL in);
+	void	GetShowPointLabels(BOOL in);
+	void	GetShowDots(BOOL in);
+	BOOL	GetShowAxesValue() { return ShowAxes; }
+	BOOL	GetShowPointLabelsValue() { return ShowPointLabels; }
+	BOOL	GetShowDotsValue() { return ShowDots; }
+	void	ToggleShowAxes();
+	void	ToggleShowPointLabels();
+	void	ToggleShowDots();
+	int	ReRenderHailstone(int xdots, int ydots);
 
-    private:
+	// Hailstone member variables (public for menu access)
+	BOOL	ShowAxes = TRUE;
+	BOOL	ShowPointLabels = TRUE;
+	BOOL	ShowDots = TRUE;
+	class CHailstone* pHailstone = nullptr;		// Persistent Hailstone object for toggles
+	int	HailstoneXdots = 0;
+	int	HailstoneYdots = 0;
+
+	private:
 	CPlot	Plot;
 	std::vector <float> &wpixels;
 	COscProcess OscProcess;
@@ -225,5 +247,11 @@ class COtherFunctions
 	int	yAxis;
 	int	zAxis;
 
-    };
+	// stuff for Hailstone
+	int	DoHailstone(int xdots, int ydots);
+	void	RenderHailstoneStatistics(HWND hwndIn, class CHailstone& hailstone, int xdots, int ydots);
+	void	RenderPointLabels(HWND hwndIn, class CHailstone& hailstone, double centerX, double centerY,
+			float pixelsPerUnitX, float pixelsPerUnitY, int screenWidth, int screenHeight);
+
+	};
 

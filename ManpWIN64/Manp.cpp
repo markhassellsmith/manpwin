@@ -629,7 +629,8 @@ int	SpecialFractals(HWND hwnd, CPixel *Pix)
 	case ICON:
 	case QUADRUPTWO:
 	case THREEPLY:
-	    if (fractalspecific[type].flags & OTHERFNINPIXEL)
+	case HAILSTONE:
+		if (fractalspecific[type].flags & OTHERFNINPIXEL)
 		{
 		OthFn.InitOtherFunctions(type, subtype, hwnd, &TrueCol, &Dib, AntStatus, FrameEnd, FrameStart, mandel_width, hor, vert, ScreenRatio, &curpass, &totpasses, user_data, wpixels, CoordSystem, xAxis, yAxis, zAxis);
 		OthFn.RunOtherFunctions(type, &SpecialFlag, &iteration, xdots, ydots, param, threshold, rotate);

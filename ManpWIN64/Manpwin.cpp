@@ -25,6 +25,7 @@
 #include "OscProcess.h"
 #include "Plot.h"
 #include "PertEngine.h"
+#include "OtherFunctions.h"
 
 extern	CDib	Dib;				// Device Independent Bitmap
 extern	CFract	Fractal;			// Fractal specific stuff
@@ -552,7 +553,7 @@ MessageBox (hwnd, TempString, szAppName, MB_ICONEXCLAMATION | MB_OK);
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_FRACTLOC, MF_ENABLED);
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_FRACTALCOORDS, MF_ENABLED);
 			 break;
-		    case 3:	   // Fractal Options menu
+			case 3:	   // Fractal Options menu
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_3D, MF_ENABLED);
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_JULIA, MF_ENABLED);
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_RDS, MF_ENABLED);
@@ -565,6 +566,10 @@ MessageBox (hwnd, TempString, szAppName, MB_ICONEXCLAMATION | MB_OK);
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_IMAGE_SIZE, MF_ENABLED);
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_START, MF_ENABLED);
 			 EnableMenuItem((HMENU)(_int64)wParam, IDM_STEREOPAIRSETUP, MF_ENABLED);
+			 // Hailstone toggle menu items - only enabled when viewing Hailstone fractal
+			 EnableMenuItem((HMENU)(_int64)wParam, IDM_HAILSTONE_TOGGLE_AXES, (type == HAILSTONE) ? MF_ENABLED : MF_GRAYED);
+			 EnableMenuItem((HMENU)(_int64)wParam, IDM_HAILSTONE_TOGGLE_LABELS, (type == HAILSTONE) ? MF_ENABLED : MF_GRAYED);
+			 EnableMenuItem((HMENU)(_int64)wParam, IDM_HAILSTONE_TOGGLE_DOTS, (type == HAILSTONE) ? MF_ENABLED : MF_GRAYED);
 			 break;
 		    case 4:	   // Animation Dialogs menu
 			 EnableMenuItem ((HMENU)(_int64)wParam, IDM_SETUPANIMATION, MF_ENABLED);
@@ -589,9 +594,9 @@ MessageBox (hwnd, TempString, szAppName, MB_ICONEXCLAMATION | MB_OK);
 		return 0;
 
 	  case WM_INITMENU:
-            // check/uncheck menu items depending on state  of related flags
+			// check/uncheck menu items depending on state  of related flags
 
-	        CheckMenuItem((HMENU)(_int64)wParam, IDC_ADDSPIRAL, (addflag ? MF_CHECKED : MF_UNCHECKED));
+			CheckMenuItem((HMENU)(_int64)wParam, IDC_ADDSPIRAL, (addflag ? MF_CHECKED : MF_UNCHECKED));
 		CheckMenuItem((HMENU)(_int64)wParam, IDM_3D, (_3dflag ? MF_CHECKED : MF_UNCHECKED));
 		CheckMenuItem((HMENU)(_int64)wParam, IDM_JULIA, (juliaflag ? MF_CHECKED : MF_UNCHECKED));
 		CheckMenuItem((HMENU)(_int64)wParam, IDM_REALTIMEJULIA, (RealTimeJuliaFlag ? MF_CHECKED : MF_UNCHECKED));
@@ -602,6 +607,15 @@ MessageBox (hwnd, TempString, szAppName, MB_ICONEXCLAMATION | MB_OK);
 		CheckMenuItem((HMENU)(_int64)wParam, IDM_USEDEFAULTPALETTE, (UseFractintPalette ? MF_CHECKED : MF_UNCHECKED));
 		CheckMenuItem((HMENU)(_int64)wParam, IDM_DISPLAYLOC, (DisplayLoc ? MF_CHECKED : MF_UNCHECKED));
 //		CheckMenuItem((HMENU)wParam, IDM_SHOWSTATUSBAR, (ShowStatusBar ? MF_CHECKED : MF_UNCHECKED));
+
+		// Hailstone toggle menu checkmarks
+		extern COtherFunctions* g_pOtherFunctions;
+		if (g_pOtherFunctions && type == HAILSTONE)
+		{
+			CheckMenuItem((HMENU)(_int64)wParam, IDM_HAILSTONE_TOGGLE_AXES, (g_pOtherFunctions->ShowAxes ? MF_CHECKED : MF_UNCHECKED));
+			CheckMenuItem((HMENU)(_int64)wParam, IDM_HAILSTONE_TOGGLE_LABELS, (g_pOtherFunctions->ShowPointLabels ? MF_CHECKED : MF_UNCHECKED));
+			CheckMenuItem((HMENU)(_int64)wParam, IDM_HAILSTONE_TOGGLE_DOTS, (g_pOtherFunctions->ShowDots ? MF_CHECKED : MF_UNCHECKED));
+		}
 
 		break;
 		
@@ -1347,6 +1361,9 @@ LRESULT CALLBACK PASCAL	MenuCommand (HWND hwnd, UINT message, WPARAM wParam, LPA
 	case IDM_FRACTALCOORDS:
 	case IDM_TIERAZON_COLOUR:
 	case IDM_TOGGLE_DISPLAY_PALETTE:
+	case IDM_HAILSTONE_TOGGLE_AXES:
+	case IDM_HAILSTONE_TOGGLE_LABELS:
+	case IDM_HAILSTONE_TOGGLE_DOTS:
 	switch (wParam)
 	    {
 	    case IDM_3DPARAM:
@@ -1502,7 +1519,7 @@ LRESULT CALLBACK PASCAL	MenuCommand (HWND hwnd, UINT message, WPARAM wParam, LPA
 		    time_to_reinit = TRUE;
 		break;
 
-	    case IDM_TOGGLE_DISPLAY_PALETTE:
+		case IDM_TOGGLE_DISPLAY_PALETTE:
 		TrueCol.DisplayPaletteFlag = !TrueCol.DisplayPaletteFlag;
 		Secondaryhwnd = hwnd;
 		Secondarymessage = message;
@@ -1511,6 +1528,21 @@ LRESULT CALLBACK PASCAL	MenuCommand (HWND hwnd, UINT message, WPARAM wParam, LPA
 		DisplayPalette(hwnd, TrueCol.DisplayPaletteFlag);
 		DisplayFractal(hwnd);
 		return 0;								// don't break as we don't want to reinit
+
+		case IDM_HAILSTONE_TOGGLE_AXES:
+		g_pOtherFunctions->ShowAxes = !g_pOtherFunctions->ShowAxes;
+		time_to_reinit = TRUE;
+		break;
+
+		case IDM_HAILSTONE_TOGGLE_LABELS:
+		g_pOtherFunctions->ShowPointLabels = !g_pOtherFunctions->ShowPointLabels;
+		time_to_reinit = TRUE;
+		break;
+
+		case IDM_HAILSTONE_TOGGLE_DOTS:
+		g_pOtherFunctions->ShowDots = !g_pOtherFunctions->ShowDots;
+		time_to_reinit = TRUE;
+		break;
 
 //	    case IDM_IMAGE_SIZE:
 //		time_to_restart = TRUE;
