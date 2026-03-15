@@ -6,9 +6,9 @@
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Visual Studio](https://img.shields.io/badge/Visual%20Studio-2022-purple.svg)
 
-**A Comprehensive C++ Fractal Rendering Application with 240+ Fractal Types**
+**Educational C++ Fractal Explorer - 240+ Types, Deep-Zoom Technology, Clone & Build with Zero Configuration**
 
-ManpWIN is a powerful Windows fractal exploration and rendering application featuring cutting-edge algorithms used in deep-zoom fractal exploration, including perturbation theory, BLA (Bilinear Approximation) acceleration, derivative-based slope shading, and a sophisticated multithreaded formula parser.
+A comprehensive fractal rendering and 2-D Hailstone visualization app, featuring cutting-edge deep-zoom algorithms, including perturbation theory, BLA acceleration, and arbitrary-precision arithmetic. This is a self-contained educational fork with all dependencies included - builds immediately in Visual Studio with zero setup.
 
 ---
 
@@ -22,6 +22,9 @@ ManpWIN is a powerful Windows fractal exploration and rendering application feat
 
 ![Barnsley M2 Fractal](docs/images/barnsley-m2.png)
 *Barnsley M2 IFS fractal - one of 240+ fractal types available, demonstrating the variety beyond Mandelbrot sets*
+
+![Hailstone Sequence](docs/images/Hailstone-sequence.png)
+*2D Hailstone sequence visualization with cycle detection - exploring discrete dynamical systems on the integer lattice*
 
 ---
 
@@ -234,6 +237,26 @@ This repository contains a modernized CMake build system enabling reproducible D
   - Stewart variations
 
 - **Lyapunov Fractals** - Stability analysis visualization
+
+- **Hailstone Sequences** - 2D integer lattice dynamical systems
+  - **5 Transformation Presets:**
+    - Current 2D Hailstone (parity-based rules on Z × Z)
+    - Simple Collatz (classic conjecture on both dimensions)
+    - Symmetric Variant (balanced growth/shrinkage)
+    - Coordinate Swap (diagonal coupling behavior)
+    - Bounded Growth (controlled 2x expansion)
+  - **Features:**
+    - Cycle detection with visual highlighting
+    - Full Z × Z domain support (negative integers)
+    - Interactive toggles (axes, labels, dots)
+    - Real-time visualization of sequence paths
+    - Statistical overlay showing cycle information
+  - **Educational Value:**
+    - Discrete dynamical systems on integer lattice
+    - Parity-based transformation rules
+    - Cycle detection algorithms
+    - Divergence vs. convergence behavior
+    - Pigeonhole principle demonstration
 
 ### Geometric & IFS Fractals (20+)
 - **IFS (Iterated Function Systems)** - 2D and 3D
