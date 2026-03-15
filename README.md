@@ -30,9 +30,15 @@ A comprehensive fractal rendering and 2-D Hailstone visualization app, featuring
 
 ## 💻 Quick Start
 
-### 🚀 Windows Users: Download & Run (No Build Required)
+### 📦 Download ManpWIN (Latest Release)
 
-**[⬇️ Download ManpWIN v1.0 for Windows (2.2 MB)](https://github.com/markhassellsmith/manpwin/releases/latest)**
+[![Latest Release](https://img.shields.io/github/v/release/markhassellsmith/manpwin)](https://github.com/markhassellsmith/manpwin/releases/latest)
+
+Always get the newest version here:
+
+👉 **[Download Latest Release](https://github.com/markhassellsmith/manpwin/releases/latest)**
+
+This ensures users always get the most up‑to‑date build.
 
 - ✅ No installation required
 - ✅ No Visual Studio needed  
