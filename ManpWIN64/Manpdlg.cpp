@@ -1317,11 +1317,14 @@ INT_PTR CALLBACK FractTypeDlg (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 		    case FPPOPCORN:
 			tempParam = IDC_FRACTINTPOPCORN;
 			break;
-		    case NUMFRACTAL:
+			case NUMFRACTAL:
 			tempParam = IDC_NUMFRACTAL;
 			break;
+			case HAILSTONE:
+			tempParam = IDC_HAILSTONE;
+			break;
 
-		    }
+			}
 		CheckRadioButton(hDlg, IDC_MANDEL, IDC_TEST, tempParam);
 		SetFocus(GetDlgItem(hDlg, tempParam));
 	        return FALSE ;
@@ -1791,11 +1794,14 @@ INT_PTR CALLBACK FractTypeDlg (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 			break;
 			CheckRadioButton(hDlg, IDC_MANDEL, IDC_TEST, (int) LOWORD(wParam));
 		        return  TRUE ;
-		    case IDC_NUMFRACTAL:
+			case IDC_NUMFRACTAL:
 			temp = NUMFRACTAL;
 			break;
+			case IDC_HAILSTONE:
+			temp = HAILSTONE;
+			break;
 
-		    case IDOK:
+			case IDOK:
 			type = temp;
 //			subtype = TempSubtype;
 			cycleflag = FALSE;

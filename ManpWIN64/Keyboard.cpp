@@ -9,6 +9,7 @@
 #include "colour.h"
 #include "menu.h"
 #include "manp.h"
+#include "OtherFunctions.h"
 
 //extern	void	ToggleRandomColour(void);
 extern	int	AnimateClose(void);
@@ -279,11 +280,27 @@ void	ProcessKeys(HWND hwnd, WPARAM wParam)
 		SendMessage (hwnd, WM_COMMAND, IDM_FDOPTIONS, 0L);		// Tierazon filter FD-Options
 	    break;
     	
-	case 'G':								// open PNG file  
-	    SendMessage (hwnd, WM_COMMAND, IDM_OPEN_PNG, 0L);
-	    break;
-    	
-	case 'I':  
+	case 'G':								// open PNG file / Hailstone Dots toggle 
+		if (GetKeyState(VK_CONTROL) < 0 && type == HAILSTONE)
+		{
+		extern COtherFunctions* g_pOtherFunctions;
+		if (g_pOtherFunctions)
+			g_pOtherFunctions->ToggleShowDots();
+		}
+		else
+		SendMessage (hwnd, WM_COMMAND, IDM_OPEN_PNG, 0L);
+		break;
+
+	case 'H':								// Hailstone Axes toggle 
+		if (GetKeyState(VK_CONTROL) < 0 && type == HAILSTONE)
+		{
+		extern COtherFunctions* g_pOtherFunctions;
+		if (g_pOtherFunctions)
+			g_pOtherFunctions->ToggleShowAxes();
+		}
+		break;
+
+	case 'I':
 	    if (GetKeyState(VK_SHIFT) < 0)
 		SendMessage (hwnd, WM_COMMAND, IDM_INVERSION_ANIM, 0L);		// Inversion Animation
 	    else
@@ -301,12 +318,18 @@ void	ProcessKeys(HWND hwnd, WPARAM wParam)
 		SendMessage(hwnd, WM_COMMAND, IDM_OPEN_KALLES, 0L);
 	    break;
 
-	case 'L':
-	    if (GetKeyState(VK_SHIFT) < 0)
+	case 'L':								// True Colour Map / Hailstone Labels toggle
+		if (GetKeyState(VK_CONTROL) < 0 && type == HAILSTONE)
+		{
+		extern COtherFunctions* g_pOtherFunctions;
+		if (g_pOtherFunctions)
+			g_pOtherFunctions->ToggleShowPointLabels();
+		}
+		else if (GetKeyState(VK_SHIFT) < 0)
 		SendMessage (hwnd, WM_COMMAND, IDM_OPEN_LST, 0L);		// open PNG animation frame list
-	    else 
+		else 
 		SendMessage (hwnd, WM_COMMAND, IDM_OPEN_TRUE_MAP, 0L);		// Open True Colour File  
-	    break;
+		break;
 	
 	case 'M':			
 	    if (GetKeyState(VK_SHIFT) < 0)

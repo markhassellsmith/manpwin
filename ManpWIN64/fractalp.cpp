@@ -2366,11 +2366,18 @@ struct fractalspecificstuff fractalspecific[]=
    },
 
    {
-    // #define NUMFRACTAL	244	// dedicated to an 11 year old girl who "discovered" it
+	// #define NUMFRACTAL	244	// dedicated to an 11 year old girl who "discovered" it
    "\"Num Fractal\"",
 	realz0, imagz0,"real value of base", "imaginaryvalue of base", ES, ES, ES, ES, ES, ES, 0,0,2,0,0,0,0,0,0,0,
    -3.5, -2.0, 4.0, 0, 2,   NOFRACTAL, 4, 1, "sin", NULL, TRIGINPIXEL + USEDOUBLEDOUBLE, NOSYM, 4.0,
    NULL, NULL, "SelectFracParams", SelectFracParams, STDBAILOUT
+   },
+
+   {
+	// #define HAILSTONE	245	// 2D Hailstone sequence visualization with cycle detection
+   "Hailstone Sequence", "Start X", "Start Y", "Max Iterations", ES, ES, ES, ES, ES, ES, ES, -10.0, 6.0, 150.0, 0,0,0,0,0,0,0,
+   -20.0, -20.0, 40.0, 0, NOFRACTAL, NOFRACTAL, 3, 0, NULL, NULL, OTHERFNINPIXEL, NOSYM, 1.0,
+   NULL, NULL, "HAILSTONEDLG", HailstoneDlg, STDBAILOUT
    },
 
 /*

@@ -2,13 +2,15 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 #include	"Plot.h"
 
 #define	DWORD	unsigned long
 #define	MAXPOINT    20
 
-//Declaration of class point
-class Point
+//Declaration of class point (renamed to avoid Windows POINT conflict)
+class PolyPoint
     {
     public:
     int x,y;
@@ -17,7 +19,7 @@ class Point
 class CPoly
     {
     private:
-    Point p[MAXPOINT];
+    PolyPoint p[MAXPOINT];
     int inter[MAXPOINT],x,y;
     int v,xmin,ymin,xmax,ymax;
     public:
