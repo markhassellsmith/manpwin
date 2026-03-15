@@ -1,8 +1,121 @@
-# Hailstone Sequence Visualization - Complete Implementation Guide
+# Hailstone Sequence Visualization
 
-## Overview
+## User Guide
 
-This document provides complete specifications for implementing a 2D Hailstone sequence visualization with cycle detection, CSV export, and interactive display features.
+### Overview
+
+The Hailstone Sequence Visualization feature allows you to explore discrete dynamical systems on the integer lattice (ℤ × ℤ). Starting from any integer point, the system applies transformation rules based on parity (even/odd) to generate fascinating mathematical sequences that either cycle or diverge to infinity.
+
+### Accessing the Feature
+
+**Menu Path:** `Fractal Type` → `Hailstone`
+
+1. Click on the `Fractal Type` menu in the main menu bar
+2. Select `Hailstone` from the dropdown menu
+3. The Hailstone configuration dialog will appear
+
+### Configuration Dialog
+
+The Hailstone dialog allows you to configure the following parameters:
+
+#### Starting Point
+- **Start X**: X-coordinate of the starting point (accepts any integer, including negative values)
+- **Start Y**: Y-coordinate of the starting point (accepts any integer, including negative values)
+- **Default**: (-10, 6) - a point known to produce interesting behavior
+
+#### Iteration Control
+- **Max Iterations**: Maximum number of steps to compute (default: 150)
+  - Higher values allow longer sequences to develop
+  - Lower values focus on initial behavior
+
+#### Transformation Preset
+Choose from five different transformation algorithms:
+
+1. **Current 2D Hailstone** (Default)
+   - Original implementation with rich mathematical behavior
+   - Rules based on (x, y) parity:
+     - (even, even): x' = x/2, y' = y/2
+     - (even, odd): x' = x/2 + 1, y' = 3y - 1
+     - (odd, even): x' = 3x - 1, y' = y/2 - 1
+     - (odd, odd): x' = 3x + 1, y' = 3y - 3
+
+2. **Simple Collatz**
+   - Classic Collatz conjecture applied to both dimensions independently
+   - Rules: If coordinate is even, divide by 2; if odd, apply 3n + 1
+   - Simpler behavior, often converging faster
+
+3. **Symmetric Variant**
+   - Symmetric transformation with balanced growth/shrinkage
+   - Rules: Odd coordinates use 3x - 1 consistently
+   - Produces more symmetric patterns
+
+4. **Coordinate Swap**
+   - Swaps X and Y coordinates in specific parity cases
+   - Creates interesting diagonal behaviors
+   - Useful for studying coordinate coupling
+
+5. **Bounded Growth**
+   - Uses 2x expansion instead of 3x to control growth
+   - Rules: Replaces 3n operations with 2n operations
+   - Produces more controlled, less divergent sequences
+
+#### Display Options
+- **Show Axes**: Display X and Y coordinate axes
+- **Show Point Labels**: Display (N, X, Y) coordinates at each point
+- **Show Dots**: Draw dots at sequence endpoints
+
+### Interactive Controls
+
+Once a Hailstone sequence is displayed, you can toggle display options via the menu:
+
+**Menu Path:** `Fractal Type` → Toggle Options
+
+- **Toggle Axes** - Show/hide coordinate axes
+- **Toggle Labels** - Show/hide point coordinate labels  
+- **Toggle Dots** - Show/hide endpoint dots
+
+### Understanding the Visualization
+
+The visualization displays:
+
+1. **Sequence Path**: Colored line segments connecting each point in the sequence
+2. **Cycle Detection**: If the sequence returns to a previously visited point, the cycle portion is highlighted in magenta
+3. **Information Overlay** (top-left corner):
+   ```
+   Hailstone Sequence (N,X,Y)
+   Starting point: (0, x₀, y₀)
+   Total points: n
+   [If cycle detected:]
+   Cycle Detected: Point (step_end, x, y)
+   Duplicate of: (start_step, x, y)
+   Cycle length: step_end - step_start
+   ```
+
+4. **Coordinate Axes**: Integer axes with tick marks for scale reference
+5. **Point Labels**: Each point shows its step number and coordinates (N, X, Y)
+
+### Interesting Starting Points to Try
+
+- **(-10, 6)**: Default - shows complex behavior before cycling
+- **(1, 1)**: Quickly finds a small cycle
+- **(-20, 15)**: Diverges - reaches max iterations without cycling
+- **(0, 0)**: Origin behavior - varies by transformation preset
+- **(5, -3)**: Demonstrates negative coordinate handling
+
+### Mathematical Notes
+
+The system exhibits two fundamental behaviors:
+
+1. **Cycling**: The sequence returns to a previous point and enters a periodic orbit
+2. **Divergence**: The sequence grows without bound, escaping to infinity
+
+By the Pigeonhole Principle, any bounded sequence must eventually cycle, as there are only finitely many integer points within any finite radius.
+
+---
+
+## Developer Implementation Guide
+
+This section provides complete specifications for implementing the Hailstone sequence visualization feature.
 
 ---
 
