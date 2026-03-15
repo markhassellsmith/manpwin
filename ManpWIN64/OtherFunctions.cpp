@@ -1356,11 +1356,12 @@ int	COtherFunctions::DoHailstone(int xdots, int ydots)
 		float pixelsPerUnitX = (float)xdots / (float)dataRangeX;
 		float pixelsPerUnitY = (float)ydots / (float)dataRangeY;
 
-		RenderPointLabels(hwnd, *pHailstone, centerX, centerY, pixelsPerUnitX, pixelsPerUnitY, xdots, ydots);
-	}
+		// Commented out - duplicate labeling handled by CHailstone::DrawPointLabels() in Hailstone.cpp
+		// RenderPointLabels(hwnd, *pHailstone, centerX, centerY, pixelsPerUnitX, pixelsPerUnitY, xdots, ydots);
+		}
 
-	return 0;
-	}
+		return 0;
+		}
 
 /**************************************************************************
 	Render Hailstone Statistics in Upper Left Corner (drawn to DIB)
@@ -1639,10 +1640,11 @@ int COtherFunctions::ReRenderHailstone(int xdots, int ydots)
 		float pixelsPerUnitX = (float)xdots / (float)dataRangeX;
 		float pixelsPerUnitY = (float)ydots / (float)dataRangeY;
 
-		RenderPointLabels(hwnd, *pHailstone, centerX, centerY, pixelsPerUnitX, pixelsPerUnitY, xdots, ydots);
-	}
+		// Commented out - duplicate labeling handled by CHailstone::DrawPointLabels() in Hailstone.cpp
+		// RenderPointLabels(hwnd, *pHailstone, centerX, centerY, pixelsPerUnitX, pixelsPerUnitY, xdots, ydots);
+		}
 
-	// Invalidate window to force redraw
+		// Invalidate window to force redraw
 	InvalidateRect(hwnd, NULL, FALSE);
 
 	return 0;
