@@ -322,11 +322,11 @@ Contributions are welcome from students, educators, and researchers.
 **Research Community:** Fractal Forums, Kalles Fraktaler, Claude Heiland-Allen, fractal algorithm researchers
 
 ---
-
+	
 ## License
 
-Original code: Copyright Paul de Leeuw  
-Educational modifications: Copyright Mark Hassell Smith (2024)
+Original code: Copyright Paul de Leeuw	  
+Educational modifications: Copyright Mark Hassell Smith (2026)
 
 **Libraries:** MPFR/GMP (LGPL v3), QD (BSD), libpng (PNG license), zlib (zlib license)
 
@@ -344,4 +344,4 @@ For educational and research use. Retain copyright notices and acknowledge sourc
 
 *"Clouds are not spheres, mountains are not cones, coastlines are not circles, and bark is not smooth, nor does lightning travel in a straight line."* — Benoit Mandelbrot
 
-**Last Updated:** 2024 | **Version:** Educational Fork 1.0 | **Status:** Active Development
+**Last Updated:** 2026 | **Version:** Educational Fork 1.0 | **Status:** Active Development
