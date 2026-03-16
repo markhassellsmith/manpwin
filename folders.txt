@@ -1,0 +1,174 @@
+Folder PATH listing for volume OS
+Volume serial number is C4A3-ACDB
+C:.
++---build
+¦   +---ALL_BUILD.dir
+¦   ¦   +---Debug
+¦   ¦   +---MinSizeRel
+¦   ¦   +---Release
+¦   ¦   +---RelWithDebInfo
+¦   +---CMakeFiles
+¦   ¦   +---0bec5b24ac0aebba94a8fec12e224fef
+¦   ¦   +---4.2.3-msvc3
+¦   ¦   ¦   +---CompilerIdC
+¦   ¦   ¦   ¦   +---Debug
+¦   ¦   ¦   ¦   ¦   +---CompilerIdC.tlog
+¦   ¦   ¦   ¦   +---tmp
+¦   ¦   ¦   +---CompilerIdCXX
+¦   ¦   ¦   ¦   +---Debug
+¦   ¦   ¦   ¦   ¦   +---CompilerIdCXX.tlog
+¦   ¦   ¦   ¦   +---tmp
+¦   ¦   ¦   +---VCTargetsPath
+¦   ¦   ¦   ¦   +---x64
+¦   ¦   ¦   ¦       +---Debug
+¦   ¦   ¦   ¦           +---VCTargetsPath.tlog
+¦   ¦   ¦   +---x64
+¦   ¦   ¦       +---Debug
+¦   ¦   +---pkgRedirects
+¦   +---ManpWIN64.dir
+¦   ¦   +---Debug
+¦   ¦   +---MinSizeRel
+¦   ¦   +---Release
+¦   ¦   ¦   +---ManpWIN64.tlog
+¦   ¦   +---RelWithDebInfo
+¦   +---MPEG
+¦   ¦   +---CMakeFiles
+¦   ¦   +---mpeg.dir
+¦   ¦   ¦   +---Debug
+¦   ¦   ¦   +---MinSizeRel
+¦   ¦   ¦   +---Release
+¦   ¦   ¦   ¦   +---mpeg.tlog
+¦   ¦   ¦   +---RelWithDebInfo
+¦   ¦   +---Release
+¦   +---parser
+¦   ¦   +---CMakeFiles
+¦   ¦   +---parser.dir
+¦   ¦   ¦   +---Debug
+¦   ¦   ¦   +---MinSizeRel
+¦   ¦   ¦   +---Release
+¦   ¦   ¦   ¦   +---parser.tlog
+¦   ¦   ¦   +---RelWithDebInfo
+¦   ¦   +---Release
+¦   +---pnglib
+¦   ¦   +---CMakeFiles
+¦   ¦   +---pnglib.dir
+¦   ¦   ¦   +---Debug
+¦   ¦   ¦   +---MinSizeRel
+¦   ¦   ¦   +---Release
+¦   ¦   ¦   ¦   +---pnglib.tlog
+¦   ¦   ¦   +---RelWithDebInfo
+¦   ¦   +---Release
+¦   +---qdlib
+¦   ¦   +---CMakeFiles
+¦   ¦   +---qdlib.dir
+¦   ¦   ¦   +---Debug
+¦   ¦   ¦   +---MinSizeRel
+¦   ¦   ¦   +---Release
+¦   ¦   ¦   ¦   +---qdlib.tlog
+¦   ¦   ¦   +---RelWithDebInfo
+¦   ¦   +---Release
+¦   +---Release
+¦   +---x64
+¦   ¦   +---Release
+¦   ¦       +---ALL_BUILD
+¦   ¦       ¦   +---ALL_BUILD.tlog
+¦   ¦       +---ZERO_CHECK
+¦   ¦           +---ZERO_CHECK.tlog
+¦   +---ZERO_CHECK.dir
+¦   ¦   +---Debug
+¦   ¦   +---MinSizeRel
+¦   ¦   +---Release
+¦   ¦   +---RelWithDebInfo
+¦   +---ZLib
+¦       +---CMakeFiles
+¦       +---Release
+¦       +---zlib.dir
+¦           +---Debug
+¦           +---MinSizeRel
+¦           +---Release
+¦           ¦   +---zlib.tlog
+¦           +---RelWithDebInfo
++---docs
+¦   +---images
++---external
+¦   +---include
+¦   +---lib
+¦   ¦   +---x64
+¦   ¦       +---Debug
+¦   ¦       +---Release
+¦   +---mpfr
++---HTMLHelp
+¦   +---html
+¦   ¦   +---manp4c6w_files
+¦   ¦   +---manp7ani_files
+¦   ¦   +---manp7col_files
+¦   ¦   +---manp7for_files
+¦   ¦   +---manp7fra_files
+¦   ¦   +---manp7hgw_files
+¦   ¦   +---manp7mar_files
+¦   ¦   +---manp7osc_files
+¦   ¦   +---manp7vow_files
+¦   ¦   +---manp7vzk_files
+¦   ¦   +---manp7w1c_files
+¦   ¦   +---manp7w1d_files
+¦   ¦   +---manp7w1f_files
+¦   ¦   +---manp7yr4_files
+¦   ¦   +---manp7yuo_files
+¦   +---images
++---ManpWIN64
+¦   +---x64
+¦       +---Debug
+¦       ¦   +---ManpWIN64.tlog
+¦       +---Release
+¦           +---ManpWIN64.tlog
++---MPEG
+¦   +---x64
+¦       +---Debug
+¦       ¦   +---mpeg.tlog
+¦       +---Release
+¦           +---mpeg.tlog
++---parser
+¦   +---x64
+¦       +---Debug
+¦       ¦   +---parser.tlog
+¦       +---Release
+¦           +---parser.tlog
++---pnglib
++---qdlib
+¦   +---x64
+¦       +---Debug
+¦       ¦   +---qdlib.tlog
+¦       +---Release
+¦           +---qdlib.tlog
++---release-package
++---Setup
++---vcpkg_installed
+¦   +---vcpkg
+¦   ¦   +---info
+¦   ¦   +---updates
+¦   +---x64-windows
+¦       +---bin
+¦       +---debug
+¦       ¦   +---bin
+¦       ¦   +---lib
+¦       ¦       +---pkgconfig
+¦       +---include
+¦       +---lib
+¦       ¦   +---pkgconfig
+¦       +---manual-tools
+¦       ¦   +---gmp
+¦       +---share
+¦           +---gmp
+¦           +---mpfr
+¦           +---vcpkg-cmake
+¦           +---vcpkg-cmake-get-vars
+¦               +---cmake_get_vars
++---x64
+¦   +---Debug
+¦   +---Release
++---ZLib
+    +---x64
+        +---Debug
+        ¦   +---zlib.tlog
+        +---Release
+            +---zlib.tlog
